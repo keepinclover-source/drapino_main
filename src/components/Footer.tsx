@@ -49,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <span>نظارت رسمی اتحادیه و کمیسیون بازرسی:</span>
               </div>
               <p className="text-[11px] text-stone-300">
-                {themeSettings?.footerUnionNotice || 'کلیه فاکتورها و قراردادهای ثبت‌شده در این سامانه تحت پوشش نظارتی کمیسیون بازرسی اتحادیه صنف پرده‌فروشان قرار دارد.'}
+                {themeSettings?.footerUnionNotice || 'فعالیت فروشندگان این سامانه تحت نظارت مستقیم اتحادیه صنف تزئینات ساختمانی در هر استان است.'}
               </p>
             </div>
           </div>
@@ -95,7 +95,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-white tracking-wider flex items-center gap-1.5">
               <Store className="w-3.5 h-3.5 text-amber-500" />
-              <span>فرصت‌های همکاری و بازرگانان</span>
+              <span>فرصت‌های شغلی و درآمد زایی</span>
             </h4>
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
@@ -103,8 +103,7 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => onNavigateTab('vendor-landing')} 
                   className="text-amber-400 hover:text-amber-300 font-bold transition-colors cursor-pointer flex items-center gap-1 text-right"
                 >
-                  <span>ثبت‌نام و لندینگ فروشگاه‌ها</span>
-                  <span className="text-[10px] px-1 bg-amber-500/20 text-amber-300 rounded">ویژه</span>
+                  <span>ثبت نام فروشندگان</span>
                 </button>
               </li>
               <li>
@@ -112,18 +111,7 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => onNavigateTab('wholesaler-landing')} 
                   className="text-amber-400 hover:text-amber-300 font-bold transition-colors cursor-pointer flex items-center gap-1 text-right"
                 >
-                  <span>ثبت‌نام و لندینگ بنکداران</span>
-                  <span className="text-[10px] px-1 bg-purple-500/30 text-purple-300 rounded">طاقه‌ای</span>
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigateTab('wholesaler-portal')} className="hover:text-white transition-colors cursor-pointer text-right">
-                  پنل اختصاصی بنکدار (مدیریت طاقه)
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigateTab('vendor-portal')} className="hover:text-white transition-colors cursor-pointer text-right">
-                  تابلوی شکار سفارشات منطقه
+                  <span>ثبت نام بنکداران</span>
                 </button>
               </li>
             </ul>

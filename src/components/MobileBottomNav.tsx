@@ -22,7 +22,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   onOpenAuthModal,
 }) => {
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 py-1.5 px-3 md:hidden shadow-lg">
+    <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] px-2 md:hidden shadow-lg">
       <div className="flex items-center justify-around">
         
         {/* Tab 1: Home */}

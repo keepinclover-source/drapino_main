@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { DEFAULT_HEADER_TOP_NOTICE, DEFAULT_HEADER_PHONE } from '../utils/themeDefaults';
 import { UserRole, SiteThemeSettings, CustomPage, UserProfile } from '../types';
 import { 
   Home, 
@@ -72,6 +73,8 @@ export const Header: React.FC<HeaderProps> = ({
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const headerPhone = themeSettings?.headerPhone ?? DEFAULT_HEADER_PHONE;
+
   const headerPages = customPages.filter((p) => p.published && p.showInHeaderNav);
 
   // Close user dropdown when clicking outside
@@ -105,33 +108,33 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="bg-stone-900 text-stone-200 text-[11px] sm:text-xs py-1.5 px-4 text-center font-medium border-b border-stone-800 flex items-center justify-center gap-2">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
           <span className="truncate max-w-xl">
-            {themeSettings?.headerTopNotice || 'طرح رسمی پرو و انتخاب کالیته در منزل با نظارت بازرسان اتحادیه | بیعانه ۳۵۰ هزار تومان'}
+            {themeSettings?.headerTopNotice ?? DEFAULT_HEADER_TOP_NOTICE}
           </span>
-          {themeSettings?.headerPhone && (
+          {headerPhone && (
             <span className="hidden md:inline font-mono mr-2 text-amber-300 text-[11px]">
-              | خط مستقیم: {themeSettings.headerPhone}
+              | خط مستقیم: {headerPhone}
             </span>
           )}
         </div>
       )}
 
       {/* Main Bar */}
-      <div className="max-w-[96rem] mx-auto px-3 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-[96rem] mx-auto px-3 sm:px-6 lg:px-8 min-h-16 sm:min-h-18 py-3 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
         
         {/* Zone 1: Brand wordmark & City Selection */}
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
           <button
             onClick={() => onTabChange('home')}
             className="group text-right text-stone-900 transition-opacity hover:opacity-90 flex items-center gap-2.5 cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-600 to-amber-800 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-br from-amber-600 to-amber-800 text-white flex items-center justify-center font-bold text-lg shadow-sm">
               {Array.from(themeSettings?.siteName || 'دراپینو')[0]}
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-black tracking-tight text-stone-900 block leading-tight font-['Vazirmatn']">
+              <span className="max-w-32 sm:max-w-40 truncate text-xl sm:text-2xl font-black tracking-tight text-stone-900 block leading-tight font-['Vazirmatn']">
                 {themeSettings?.siteName || 'دراپینو'}
               </span>
-              <span className="hidden sm:block text-[10px] text-amber-800/80 font-medium tracking-wider">
+              <span className="hidden lg:block max-w-40 truncate text-[10px] text-amber-800/80 font-medium tracking-wider">
                 {themeSettings?.tagline || 'بازار پرده در خانه شما'}
               </span>
             </div>
@@ -142,18 +145,18 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onOpenCityModal}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100/90 border border-amber-200/90 text-amber-950 text-xs font-bold transition-all shadow-2xs cursor-pointer group"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100/90 border border-amber-200/90 text-amber-950 text-xs font-bold transition-all shadow-2xs cursor-pointer group"
               title="انتخاب شهر برای مشاهده برترین فروشگاه‌های منطقه شما"
             >
               <MapPin className="w-3.5 h-3.5 text-amber-700 group-hover:scale-110 transition-transform" />
               <span>شهر:</span>
-              <span className="text-amber-800 underline decoration-amber-300 font-black">{selectedCity}</span>
+              <span className="text-amber-800 underline decoration-amber-300 font-black max-w-24 truncate">{selectedCity}</span>
             </button>
           )}
         </div>
 
         {/* Zone 2: Role-Aware Navigation Links */}
-        <nav className="hidden 2xl:flex items-center gap-4 2xl:gap-5 text-sm font-medium text-stone-600">
+        <nav className="hidden xl:flex order-last basis-full flex-wrap items-center justify-center gap-x-5 gap-y-3 border-t border-stone-100 pt-3 text-sm font-medium text-stone-600">
           <button
             onClick={() => onTabChange('home')}
             className={`transition-colors whitespace-nowrap pb-1 cursor-pointer ${
@@ -291,7 +294,7 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         {/* Zone 3: User Auth / Profile Badge & Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 shrink-0">
           
           {/* USER ACCOUNT BADGE / DROPDOWN */}
           {currentUser ? (
@@ -303,20 +306,20 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="w-7 h-7 rounded-lg bg-amber-700 text-white font-bold text-xs flex items-center justify-center">
                   {currentUser.name ? currentUser.name.slice(0, 1) : <User className="w-3.5 h-3.5" />}
                 </div>
-                <div className="hidden sm:block text-right">
-                  <span className="block text-xs font-bold text-stone-900 leading-tight">
+                <div className="hidden md:block min-w-0 max-w-32 text-right">
+                  <span className="block truncate text-xs font-bold text-stone-900 leading-tight">
                     {currentUser.role === 'vendor' ? (currentUser.storeName || currentUser.name) : currentUser.name}
                   </span>
                   <span className="block text-[10px] text-amber-800 font-medium leading-none">
                     {getRoleLabel(currentUser.role)}
                   </span>
                 </div>
-                <ChevronDown className="hidden sm:block w-3.5 h-3.5 text-stone-500" />
+                <ChevronDown className="hidden md:block w-3.5 h-3.5 text-stone-500" />
               </button>
 
               {/* User Dropdown Menu */}
               {userDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 text-xs text-right animate-in fade-in zoom-in-95 duration-100">
+                <div className="fixed inset-x-3 top-24 sm:absolute sm:inset-x-auto sm:top-auto sm:left-0 mt-2 w-auto sm:w-64 max-w-[calc(100vw-1.5rem)] bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 text-xs text-right animate-in fade-in zoom-in-95 duration-100">
                   <div className="p-2.5 border-b border-stone-100 mb-1">
                     <span className="font-bold text-stone-900 block text-sm">
                       {currentUser.name}
@@ -453,7 +456,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenAuthModal('register', 'customer')}
-                className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold text-white bg-amber-700 hover:bg-amber-800 rounded-xl transition-colors shadow-xs cursor-pointer"
+                className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold text-white bg-amber-700 hover:bg-amber-800 rounded-xl transition-colors shadow-xs cursor-pointer"
                 title="عضویت اختصاصی مشتریان خانگی"
               >
                 <User className="w-4 h-4" />
@@ -486,14 +489,16 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-1.5 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-amber-700 hover:bg-amber-800 rounded-lg transition-colors shadow-sm whitespace-nowrap active:scale-[0.98] cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
-            <span className="hidden sm:inline">{themeSettings?.headerCtaText || 'رزرو مشاوره در خانه'}</span>
+            <span className="hidden lg:inline">{themeSettings?.headerCtaText || 'رزرو مشاوره در خانه'}</span>
           </button>
 
           {/* Hamburger button for mobile navigation */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="2xl:hidden p-2 text-stone-700 hover:bg-stone-100 rounded-lg cursor-pointer"
+            className="xl:hidden p-2 text-stone-700 hover:bg-stone-100 rounded-lg cursor-pointer"
             aria-label="منو"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="header-mobile-menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -502,7 +507,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="2xl:hidden border-t border-stone-200 bg-white px-4 py-3 space-y-2 shadow-lg animate-in fade-in duration-150">
+        <div id="header-mobile-menu" className="xl:hidden border-t border-stone-200 bg-white px-4 py-3 max-h-[calc(100dvh-13rem-env(safe-area-inset-bottom))] md:max-h-[calc(100dvh-7rem)] overflow-y-auto space-y-2 shadow-lg animate-in fade-in duration-150">
           
           {/* User Profile in Mobile Drawer */}
           {currentUser ? (

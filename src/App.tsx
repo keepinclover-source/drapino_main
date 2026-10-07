@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { 
   UserRole, 
   OrderStatus, 
@@ -119,7 +119,7 @@ function DrapinoMain() {
   });
 
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() =>
-    loadStored<UserProfile | null>('autopardeh_current_user', INITIAL_USERS[0])
+    loadStored<UserProfile | null>('autopardeh_current_user', INITIAL_USERS[0] ?? null)
   );
 
   // Global State
@@ -127,6 +127,20 @@ function DrapinoMain() {
     return currentUser ? currentUser.role : 'customer';
   });
   const [activeTab, setActiveTab] = useState<string>('home');
+  const [footerNavigationCount, setFooterNavigationCount] = useState(0);
+  const mobileContentRef = useRef<HTMLDivElement>(null);
+
+  // Reset the scroll after the destination renders, including repeated links.
+  useLayoutEffect(() => {
+    if (footerNavigationCount === 0) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    mobileContentRef.current?.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [footerNavigationCount]);
+
+  const handleFooterNavigation = (tab: string) => {
+    setActiveTab(tab);
+    setFooterNavigationCount((count) => count + 1);
+  };
 
   // Persistence States
   const [orders, setOrders] = useState<VisitRequest[]>(() => {
@@ -255,7 +269,9 @@ function DrapinoMain() {
 
   // Active vendor for Vendor Portal
   const [currentVendorId, setCurrentVendorId] = useState<string>('vnd-101');
-  const currentVendor = vendors.find((v) => v.id === currentVendorId) || vendors[0];
+  const currentVendor = currentUser?.role === 'admin'
+    ? vendors.find((v) => v.id === currentVendorId) || vendors[0]
+    : vendors.find((v) => v.id === currentUser?.vendorId);
 
   // Modals & previews
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -505,10 +521,13 @@ function DrapinoMain() {
 
   // User Management Handlers (for Admin Panel Users Menu)
   const handleAddUser = (newUser: UserProfile) => {
-    setUsers((prev) => [newUser, ...prev]);
+    const userToAdd = newUser.role === 'vendor'
+      ? { ...newUser, vendorId: newUser.vendorId || `vnd-${Date.now()}` }
+      : newUser;
+    setUsers((prev) => [userToAdd, ...prev]);
     if (newUser.role === 'vendor') {
       const newV: CurtainVendor = {
-        id: newUser.vendorId || `vnd-${Date.now()}`,
+        id: userToAdd.vendorId!,
         name: newUser.storeName || newUser.name,
         ownerName: newUser.name,
         phone: newUser.phone,
@@ -2298,7 +2317,7 @@ function DrapinoMain() {
 
   // Vendor Reserves a Day in Advance for Buy Box (Max 8 days per Persian solar month)
   const handleReserveBuyBox = (dateIso: string, datePersian: string, price: number): { success: boolean; message: string } => {
-    const vendor = vendors.find((v) => v.id === currentVendor.id);
+    const vendor = vendors.find((v) => v.id === currentVendor?.id);
     if (!vendor) return { success: false, message: 'اطلاعات فروشگاه یافت نشد.' };
 
     // 0. محدودیت‌های بای‌باکس (۷ روز پس از اولین شکار + آگهی فعال در نردبان و ویترین + عدم محرومیت)
@@ -2423,7 +2442,7 @@ function DrapinoMain() {
     const order = orders.find((o) => o.id === orderId);
     if (!order) return;
 
-    const vendor = vendors.find((v) => v.id === currentVendor.id);
+    const vendor = vendors.find((v) => v.id === currentVendor?.id);
     if (!vendor) return;
 
     const now = new Date();
@@ -2769,6 +2788,20 @@ function DrapinoMain() {
             </div>
           );
         }
+        if (!currentVendor) {
+          return (
+            <div className="py-16 max-w-xl mx-auto px-4 text-center space-y-4">
+              <h2 className="text-xl font-bold">اطلاعات فروشگاه یافت نشد.</h2>
+              <p>برای دسترسی به کارتابل، ابتدا فروشگاه خود را ثبت کنید.</p>
+              <button
+                onClick={() => handleOpenAuthModal('register', 'vendor')}
+                className="px-6 py-3 bg-amber-700 text-white rounded-xl"
+              >
+                ثبت‌نام فروشگاه
+              </button>
+            </div>
+          );
+        }
         {
           const fullSuspension = getActiveSuspension(restrictions, currentVendor.id, 'all');
           if (fullSuspension) {
@@ -2807,7 +2840,7 @@ function DrapinoMain() {
             onAcceptBuyBoxOrder={handleAcceptBuyBoxOrder}
             onRejectBuyBoxOrderToHunting={handleRejectBuyBoxOrderToHunting}
             operationalCities={operationalCities}
-            onSwitchVendor={(vendorId) => setCurrentVendorId(vendorId)}
+            onSwitchVendor={currentUser.role === 'admin' ? setCurrentVendorId : undefined}
           />
         );
 
@@ -3034,7 +3067,7 @@ function DrapinoMain() {
   return (
     <div 
       className={`min-h-screen bg-[#FAFAF8] text-[#1C1917] flex flex-col font-['${themeSettings.fontFamily || 'Vazirmatn'}'] ${
-        isMobilePreview ? 'p-4 sm:p-8 bg-stone-800' : ''
+        isMobilePreview ? 'p-4 sm:p-8 bg-stone-800' : 'pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0'
       }`}
     >
       
@@ -3053,7 +3086,7 @@ function DrapinoMain() {
           </div>
 
           {/* Mobile Frame Header */}
-          <div className="overflow-y-auto flex-1 pb-16">
+          <div ref={mobileContentRef} className="overflow-y-auto flex-1 pb-16">
             <Header
               currentRole={currentRole}
               currentUser={currentUser}
@@ -3081,7 +3114,7 @@ function DrapinoMain() {
             <Footer
               onOpenBookingModal={() => setIsBookingModalOpen(true)}
               onOpenEstimatorModal={() => setIsEstimatorModalOpen(true)}
-              onNavigateTab={setActiveTab}
+              onNavigateTab={handleFooterNavigation}
               themeSettings={themeSettings}
               customPages={customPages}
               onSelectCustomPage={handleSelectCustomPage}
@@ -3132,14 +3165,14 @@ function DrapinoMain() {
             onOpenCityModal={() => setIsCityModalOpen(true)}
           />
 
-          <main className="flex-1 pb-16 md:pb-0">
+          <main className="flex-1">
             {renderContent()}
           </main>
 
           <Footer
             onOpenBookingModal={() => setIsBookingModalOpen(true)}
             onOpenEstimatorModal={() => setIsEstimatorModalOpen(true)}
-            onNavigateTab={setActiveTab}
+            onNavigateTab={handleFooterNavigation}
             themeSettings={themeSettings}
             customPages={customPages}
             onSelectCustomPage={handleSelectCustomPage}
@@ -3156,22 +3189,6 @@ function DrapinoMain() {
             onOpenAuthModal={(m) => handleOpenAuthModal(m || 'login', 'customer')}
           />
 
-          {/* دکمه‌ی شناور پیشنهاد و گزارش ایراد */}
-          {activeTab !== 'feedback' && (
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('feedback');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              aria-label="پیشنهاد یا گزارش ایراد"
-              data-testid="feedback-fab"
-              className="fixed z-30 right-3 bottom-20 md:bottom-6 flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold shadow-lg cursor-pointer"
-            >
-              <span aria-hidden>💡</span>
-              <span className="hidden sm:inline">پیشنهاد یا گزارش ایراد</span>
-            </button>
-          )}
         </>
       )}
 
@@ -3205,7 +3222,7 @@ function DrapinoMain() {
           currentUserRole={currentRole}
           currentUserName={
             currentRole === 'vendor' 
-              ? currentVendor.name 
+              ? (currentVendor?.name || currentUser?.name || 'فروشگاه')
               : currentRole === 'customer' 
                 ? (currentUser?.name || chatOrder.customerName)
                 : 'مدیر سامانه'

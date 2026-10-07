@@ -35,15 +35,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const depositFee = themeSettings?.customerDepositFee || 350000;
 
   return (
-    <section className="relative overflow-hidden bg-stone-50 border-b border-stone-200 pt-8 pb-16 lg:py-20">
+    <section className="relative overflow-hidden bg-stone-50 border-b border-stone-200 pt-6 pb-10 sm:pt-8 sm:pb-16 lg:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column (Persian Right): Value Proposition & Copy */}
-          <div className="lg:col-span-7 space-y-6 text-right">
+          <div className="lg:col-span-7 min-w-0 space-y-5 sm:space-y-6 text-right">
             
             {/* Live activity indicator */}
-            <div className="inline-flex items-center gap-2 text-xs font-medium text-amber-900 bg-amber-100/80 border border-amber-300/60 px-3 py-1.5 rounded-full">
+            <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] sm:text-xs font-medium text-amber-900 bg-amber-100/80 border border-amber-300/60 px-3 py-1.5 rounded-full">
               <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
               <span>{heroBadge}</span>
               <span className="text-stone-400">·</span>
@@ -51,7 +51,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stone-900 tracking-tight leading-[1.25] text-balance">
+            <h1 className="text-[1.65rem] sm:text-4xl lg:text-5xl font-extrabold text-stone-900 tracking-tight leading-[1.25] text-balance">
               {heroTitle}
             </h1>
 
@@ -73,13 +73,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 pt-2">
               <button
                 onClick={onOpenBookingModal}
-                className="flex items-center justify-center gap-2 px-6 py-3.5 text-base font-bold text-white bg-amber-700 hover:bg-amber-800 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.99]"
+                className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3.5 text-sm sm:text-base font-bold text-white bg-amber-700 hover:bg-amber-800 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.99]"
               >
                 <span>رزرو مشاوره و اعزام فروشگاه به خانه</span>
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="w-5 h-5 shrink-0" />
               </button>
 
               <button
@@ -92,7 +92,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Social Proof & Metrics Adjacency */}
-            <div className="pt-4 border-t border-stone-200 flex flex-wrap items-center gap-6 text-xs text-stone-600">
+            <div className="pt-4 border-t border-stone-200 flex flex-wrap items-center gap-3 sm:gap-6 text-xs text-stone-600">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>بیش از ۱,۴۰۰ خانه اندازه‌گیری شده</span>
@@ -110,7 +110,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Right Column: Hero Visual Asset Showcase */}
-          <div className="lg:col-span-5 relative">
+          <div className="lg:col-span-5 min-w-0 relative">
             <div className="relative rounded-2xl overflow-hidden shadow-xl border border-stone-200/80 bg-stone-100 aspect-[4/3] lg:aspect-[3/3]">
               <img
                 src={heroImageUrl}
@@ -121,7 +121,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
               
               {/* Overlaid Card Info */}
-              <div className="absolute bottom-4 right-4 left-4 p-4 rounded-xl bg-white/95 backdrop-blur-md border border-white/60 shadow-lg text-right">
+              <div className="absolute bottom-3 right-3 left-3 sm:bottom-4 sm:right-4 sm:left-4 p-3 sm:p-4 rounded-xl bg-white/95 backdrop-blur-md border border-white/60 shadow-lg text-right">
                 <div className="flex items-center justify-between gap-2 mb-1.5">
                   <span className="text-xs font-semibold text-amber-800">کالیته زنده در محیط خانه</span>
                   <span className="text-[11px] text-stone-500 font-medium tabular-nums">نور طبیعی پنجره</span>

@@ -1,3 +1,4 @@
+import { DEFAULT_HEADER_TOP_NOTICE, DEFAULT_HEADER_PHONE } from '../utils/themeDefaults';
 import React, { useState } from 'react';
 import { 
   VisitRequest, 
@@ -357,7 +358,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   const [blogContent, setBlogContent] = useState('');
 
   // Site Customizer State (Local Draft)
-  const [draftTheme, setDraftTheme] = useState<SiteThemeSettings>({ ...themeSettings });
+  const [draftTheme, setDraftTheme] = useState<SiteThemeSettings>({
+    ...themeSettings,
+    headerTopNotice: themeSettings.headerTopNotice ?? DEFAULT_HEADER_TOP_NOTICE,
+    headerPhone: themeSettings.headerPhone ?? DEFAULT_HEADER_PHONE,
+  });
   const [themeSaveSuccess, setThemeSaveSuccess] = useState(false);
 
   // Discount Coupon Management State
@@ -3294,12 +3299,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-stone-700 mb-1">
-                      متن پیام اعلان نوار بالای هدر (Header Top Notice Bar):
+                    <label htmlFor="header-top-notice" className="block text-xs font-semibold text-stone-700 mb-1">
+                      متن نوار بالای هدر:
                     </label>
                     <input
+                      id="header-top-notice"
                       type="text"
-                      value={draftTheme.headerTopNotice || 'طرح رسمی پرو و انتخاب کالیته در منزل با نظارت بازرسان اتحادیه | بیعانه ۳۵۰ هزار تومان'}
+                      value={draftTheme.headerTopNotice ?? DEFAULT_HEADER_TOP_NOTICE}
                       onChange={(e) => setDraftTheme({ ...draftTheme, headerTopNotice: e.target.value })}
                       className="w-full px-3.5 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-700 text-stone-900"
                     />
@@ -3326,11 +3332,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 mb-1">تلفن تماس مستقیم در هدر:</label>
+                    <label htmlFor="header-direct-phone" className="block text-xs font-semibold text-stone-700 mb-1">شماره خط مستقیم در نوار بالای هدر:</label>
                     <input
+                      id="header-direct-phone"
                       type="text"
                       dir="ltr"
-                      value={draftTheme.headerPhone || draftTheme.supportPhone}
+                      value={draftTheme.headerPhone ?? DEFAULT_HEADER_PHONE}
                       onChange={(e) => setDraftTheme({ ...draftTheme, headerPhone: e.target.value })}
                       className="w-full px-3.5 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-700 text-stone-900 font-mono text-left"
                     />
@@ -3386,7 +3393,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     <label className="block text-xs font-semibold text-stone-700 mb-1">بیانیه رسمی نظارت اتحادیه در فوتر:</label>
                     <textarea
                       rows={2}
-                      value={draftTheme.footerUnionNotice || 'پلتفرم دراپینو دارای شناسه صنفی معتبر از اتحادیه صنف پرده‌دوزان و پارچه‌فروشان بوده و کلیه قراردادها و فاکتورها تحت نظارت مستقیم کمیسیون بازرسی قرار دارند.'}
+                      value={draftTheme.footerUnionNotice || 'فعالیت فروشندگان این سامانه تحت نظارت مستقیم اتحادیه صنف تزئینات ساختمانی در هر استان است.'}
                       onChange={(e) => setDraftTheme({ ...draftTheme, footerUnionNotice: e.target.value })}
                       className="w-full px-3.5 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-700 text-stone-900 leading-relaxed"
                     />

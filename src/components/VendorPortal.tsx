@@ -281,7 +281,7 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({
 
   // Vendor switch override for quick interactive testing across cities (Mashhad, Nishabur, Tehran)
   const [selectedVendorOverrideId, setSelectedVendorOverrideId] = useState<string | null>(null);
-  const activeVendor = (selectedVendorOverrideId && vendors.find((v) => v.id === selectedVendorOverrideId)) || currentVendor;
+  const activeVendor = (onSwitchVendor && selectedVendorOverrideId && vendors.find((v) => v.id === selectedVendorOverrideId)) || currentVendor;
 
   // Sub-filter for hunting board: all orders, local only, or satellite towns only
   const [huntingBoardFilter, setHuntingBoardFilter] = useState<'all' | 'local_only' | 'satellites_only'>('all');
@@ -585,7 +585,7 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({
               </div>
 
               {/* Quick Vendor/City Switcher for Demo & Testing */}
-              {vendors.length > 1 && (
+              {onSwitchVendor && vendors.length > 1 && (
                 <div className="mt-2.5 flex flex-wrap items-center gap-2 pt-2 border-t border-stone-100">
                   <span className="text-[11px] font-bold text-stone-600">سوئیچ فروشگاه جهت آزمایش شهرها:</span>
                   <select
